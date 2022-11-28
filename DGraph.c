@@ -27,8 +27,8 @@ typedef struct edge_struct * Edge;
 
 DGraph createDGraph(size_t elementSize, fcmp cmpTag, fcmp cmpData) {
     DGraph new = malloc(sizeof(struct dgraph_struct));
-    new->vertex = listCreate(sizeof(struct vertex_struct));
-    new->edge = listCreate(sizeof(struct edge_struct));
+    new->vertex = listCreate(sizeof(Vertex));
+    new->edge = listCreate(sizeof(Edge));
     new->size = 0;
     new->elementSize = elementSize;
     new->cmpTag = cmpTag;
