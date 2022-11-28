@@ -5,8 +5,9 @@
 
 typedef void * Type;
 typedef struct list_struct * List;
+typedef int (*fcmp) (Type, Type);
 
-List listCreate(size_t);
+List listCreate(size_t, fcmp);
 void listAdd(List, Type);
 unsigned int listSize(List);
 void listDestroy(List);

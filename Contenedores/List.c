@@ -13,9 +13,10 @@ struct list_struct {
     Node last;
     unsigned int size;
     size_t elementSize;
+    fcmp cmp;
 };
 
-List listCreate(size_t bytes) {
+List listCreate(size_t bytes, fcmp cmp) {
     List new = malloc(sizeof(struct list_struct));
     if (!new) return NULL;
 
@@ -23,6 +24,7 @@ List listCreate(size_t bytes) {
     new->last = NULL;
     new->size = 0;
     new->elementSize = bytes;
+    new->cmp = cmp;
 
     return new;
 }
@@ -173,7 +175,7 @@ int listIndexOf(List list, Type data) {
         char *d1 = (char *) current->data;
         char *d2 = (char *) data;
 
-        if (strcmp(d1, d2) == 0) {
+        if (list->cmp(d1, d2) == 0) {
             return i;
         }
         current = current->next;
