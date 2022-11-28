@@ -29,8 +29,8 @@ typedef struct edge_struct * Edge;
 
 DGraph createDGraph(size_t elementSize, size_t tagSize, fcmp cmpTag, fcmp cmpData) {
     DGraph new = malloc(sizeof(struct dgraph_struct));
-    new->vertex = listCreate(sizeof(struct vertex_struct));
-    new->edge = listCreate(sizeof(Edge));
+    new->vertex = listCreate(sizeof(struct vertex_struct), cmpTag);
+    new->edge = listCreate(sizeof(Edge), cmpTag);
     new->size = 0;
     new->elementSize = elementSize;
     new->tagSize = tagSize;
@@ -57,7 +57,7 @@ void addVertex(DGraph DG, Type data, Type tag) {
     Vertex new = malloc(sizeof(struct vertex_struct));
     if (!new) return;
 
-    new->neighbours = listCreate(sizeof(struct vertex_struct));
+    new->neighbours = listCreate(sizeof(struct vertex_struct), DG->cmpTag);
 
     // Copy data to new directions
     Type tempData = malloc(DG->elementSize);
