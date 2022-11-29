@@ -94,8 +94,10 @@ Bool adjacent(DGraph dgraph, Type tag1, Type tag2) {
             current3 = getVertex(current->neighbours, dgraph->cmpTag, tag2, listSize(current->neighbours));
             if (current3) {
                 return TRUE;
-            } else if (current2) {
-                current3 = getVertex(current->neighbours, dgraph->cmpTag, tag2, listSize(current->neighbours));
+            }
+        }
+        else if (current2) {
+                current3 = getVertex(current2->neighbours, dgraph->cmpTag, tag1, listSize(current->neighbours));
                 if (current3) {
                     return TRUE;
                 }
@@ -103,7 +105,7 @@ Bool adjacent(DGraph dgraph, Type tag1, Type tag2) {
         }
         return FALSE;
     }
-}
+
 
 List neighbors(DGraph dgraph, Type tag){
     //Solo falta retornarse a si mismo. Pense en añadirlo a la lista de neighbors, pero no sé...
