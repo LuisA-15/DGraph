@@ -1,5 +1,4 @@
 #include "DGraph.h"
-#include "Contenedores/List.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -71,3 +70,80 @@ void addVertex(DGraph DG, Type data, Type tag) {
     listAdd(DG->vertex, new);
     DG->size++;
 }
+
+
+//Retorna la direccion del vector cuando la comparacion es exitosa
+Vertex getVertex(List vert, fcmp cmpTag, Type d1, unsigned int size){
+    Vertex current = NULL;
+    for(int i=0; i<size; i++){
+        current = listGet(vert, i);
+        if(cmpTag(current->tag, d1) == 0){
+            return current;
+        }
+    }
+    return current;
+}
+
+
+Bool adjacent(DGraph dgraph, Type tag1, Type tag2) {
+    if (dgraph != NULL) {
+        Vertex current, current2, current3;
+        current = getVertex(dgraph->vertex, dgraph->cmpTag, tag1, dgraph->size);
+        current2 = getVertex(dgraph->vertex, dgraph->cmpTag, tag2, dgraph->size);
+        if (current) {
+            current3 = getVertex(current->neighbours, dgraph->cmpTag, tag2, listSize(current->neighbours));
+            if (current3) {
+                return TRUE;
+            }
+        }
+        else if (current2) {
+                current3 = getVertex(current2->neighbours, dgraph->cmpTag, tag1, listSize(current->neighbours));
+                if (current3) {
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
+
+
+List neighbors(DGraph dgraph, Type tag){
+    //Solo falta retornarse a si mismo. Pense en añadirlo a la lista de neighbors, pero no sé...
+    if(dgraph != NULL){
+        Vertex current;
+        current = getVertex(dgraph->vertex,dgraph->cmpTag,tag,dgraph->size);
+        if(current){
+            return current->neighbours;
+        }
+    }
+    return NULL;
+}
+
+void setVertexData(DGraph dgraph, Type tag, Type data){
+    if(dgraph != NULL){
+        Vertex current;
+        current = getVertex(dgraph->vertex, dgraph->cmpTag, tag, dgraph->size);
+        if(current){
+            Type d = malloc(sizeof(dgraph->elementSize));
+            memcpy(d,data,dgraph->elementSize);
+            current->data = d;
+        }
+    }
+}
+
+Type getVertexData(DGraph dgraph, Type tag){
+    if(dgraph != NULL){
+        Vertex  current;
+        current = getVertex(dgraph->vertex, dgraph->cmpTag, tag, dgraph->size);
+        if(current){
+            return current->data;
+        }
+    }
+    return NULL;
+}
+
+
+
+
+
+
