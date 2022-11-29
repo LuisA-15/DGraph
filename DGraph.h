@@ -14,5 +14,6 @@ void addVertex(DGraph, Type data, Type tag);
 Bool adjacent(DGraph, Type, Type);
 List neighbors(DGraph, Type);
 void setVertexData(DGraph, Type, Type);
+void addEdge(DGraph, Type src, Type dst, Type tag);
 
 #endif //DGRAPH_DGRAPH_H

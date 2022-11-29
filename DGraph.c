@@ -26,6 +26,8 @@ struct edge_struct {
 };
 typedef struct edge_struct * Edge;
 
+Vertex getVertex(List vert, fcmp cmpTag, Type tag, unsigned int size);
+
 DGraph createDGraph(size_t elementSize, size_t tagSize, fcmp cmpTag, fcmp cmpData) {
     DGraph new = malloc(sizeof(struct dgraph_struct));
     new->vertex = listCreate(sizeof(struct vertex_struct));
@@ -71,17 +73,54 @@ void addVertex(DGraph DG, Type data, Type tag) {
     DG->size++;
 }
 
+Bool edgeExists(DGraph DG, Type src, Type dst) {
+    // Find vertex that has the src tag
+    Vertex vSrc = getVertex(DG->vertex, DG->cmpTag, src, DG->size);
+
+    if (listSize(vSrc->neighbours) == 0) return FALSE;
+    // Return False if no other neighbour has the dst tag
+    Vertex current;
+    for (int i = 0; i < listSize(vSrc->neighbours); i++) {
+        current = listGet(vSrc->neighbours, i);
+        if (DG->cmpTag(current->tag, dst) == 0) return TRUE;
+    }
+    return FALSE;
+}
+
+void addEdge(DGraph DG, Type src, Type dst, Type tag) {
+    Vertex vSrc = getVertex(DG->vertex, DG->cmpTag, src, DG->size);
+    if (!vSrc || !vertexExists(DG, dst)) return;
+    if (edgeExists(DG, src, dst)) return;
+
+    Edge new = malloc(sizeof(struct edge_struct));
+    if (!new) return;
+
+    Type tempSrc = malloc(DG->tagSize);
+    Type tempDst = malloc(DG->tagSize);
+    Type tempTag = malloc(DG->tagSize);
+    memcpy(tempSrc, src, DG->tagSize);
+    memcpy(tempDst, dst, DG->tagSize);
+    memcpy(tempTag, tag, DG->tagSize);
+    new->source = tempSrc;
+    new->destination = tempDst;
+    new->tag = tempTag;
+
+    listAdd(DG->edge, new);
+    listAdd(vSrc->neighbours, new);
+}
+
+
 
 //Retorna la direccion del vector cuando la comparacion es exitosa
-Vertex getVertex(List vert, fcmp cmpTag, Type d1, unsigned int size){
+Vertex getVertex(List vert, fcmp cmpTag, Type tag, unsigned int size) {
     Vertex current = NULL;
-    for(int i=0; i<size; i++){
+    for(int i = 0; i < size; i++){
         current = listGet(vert, i);
-        if(cmpTag(current->tag, d1) == 0){
+        if(cmpTag(current->tag, tag) == 0){
             return current;
         }
     }
-    return current;
+    return NULL;
 }
 
 
