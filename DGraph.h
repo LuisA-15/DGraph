@@ -9,7 +9,7 @@ typedef struct dgraph_struct * DGraph;
 typedef enum {FALSE, TRUE} Bool;
 typedef int (*fcmp) (Type, Type);
 
-DGraph createDGraph(size_t elementSize, size_t tagSize, fcmp cmpTag, fcmp cmpData);
+DGraph createDGraph(size_t elementSize, size_t tagSize, fcmp cmpTag);
 void addVertex(DGraph, Type data, Type tag);
 void addEdge(DGraph, Type src, Type dst, Type tag);
 void setVertexData(DGraph, Type tag, Type data);
