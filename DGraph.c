@@ -10,7 +10,6 @@ struct dgraph_struct {
     size_t elementSize;
     size_t tagSize;
     fcmp cmpTag;
-    fcmp cmpData;
 };
 
 struct vertex_struct {
