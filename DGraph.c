@@ -152,12 +152,16 @@ Bool adjacent(DGraph dgraph, Type tagX, Type tagY) {
 
 
 List neighbors(DGraph dgraph, Type tag) {
-    //Solo falta retornarse a si mismo. Pense en añadirlo a la lista de neighbors, pero no sé...
     if(dgraph != NULL){
+
+        List neighbour = listCreate(dgraph->elementSize);
         Vertex current;
         current = getVertex(dgraph->vertex,dgraph->cmpTag,tag,dgraph->size);
         if(current){
-            return current->neighbours;
+            for (int i = 0; i < listSize(current->neighbours); i++) {
+                listAdd(neighbour, listGet(current->neighbours, i));
+            }
+            return neighbour;
         }
     }
     return NULL;
