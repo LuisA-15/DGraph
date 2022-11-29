@@ -151,7 +151,7 @@ Bool adjacent(DGraph dgraph, Type tagX, Type tagY) {
 }
 
 
-List neighbors(DGraph dgraph, Type tag) {
+List neighbours(DGraph dgraph, Type tag) {
     if(dgraph != NULL){
 
         List neighbour = listCreate(dgraph->elementSize);

@@ -17,7 +17,7 @@ Type getVertexData(DGraph dgraph, Type tag);
 void setEdgeTag(DGraph, Type src, Type dst, Type newTag);
 Type getEdgeTag(DGraph, Type src, Type dst);
 Bool adjacent(DGraph, Type tagX, Type tagY);
-List neighbors(DGraph, Type tag);
+List neighbours(DGraph, Type tag);
 int DGraphSize(DGraph);
 void removeVertex(DGraph, Type tag);
 void removeEdge(DGraph, Type src, Type dst);
