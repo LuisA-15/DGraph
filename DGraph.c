@@ -1,7 +1,6 @@
 #include "DGraph.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 struct dgraph_struct {
     List vertex;
@@ -72,16 +71,14 @@ void addVertex(DGraph DG, Type data, Type tag) {
     DG->size++;
 }
 
-Bool edgeExists(DGraph DG, Type src, Type dst) {
-    // Find vertex that has the src tag
-    Vertex vSrc = getVertex(DG->vertex, DG->cmpTag, src, DG->size);
-
-    if (listSize(vSrc->neighbours) == 0) return FALSE;
-    // Return False if no other neighbour has the dst tag
-    Vertex current;
-    for (int i = 0; i < listSize(vSrc->neighbours); i++) {
-        current = listGet(vSrc->neighbours, i);
-        if (DG->cmpTag(current->tag, dst) == 0) return TRUE;
+Bool edgeExists(DGraph DG, Type src, Type dst, Type tag) {
+    Edge current;
+    for (int i = 0; i < listSize(DG->edge); i++) {
+        current = listGet(DG->edge, i);
+        if (DG->cmpTag(current->tag, tag) == 0)
+            return TRUE;
+        if (DG->cmpTag(current->source, src) == 0 && DG->cmpTag(current->destination, dst) == 0)
+            return TRUE;
     }
     return FALSE;
 }
@@ -91,7 +88,7 @@ void addEdge(DGraph DG, Type src, Type dst, Type tag) {
     Vertex vDst = getVertex(DG->vertex, DG->cmpTag, dst, DG->size);
 
     if (!vSrc || !vDst) return;
-    if (edgeExists(DG, src, dst)) return;
+    if (edgeExists(DG, src, dst, tag)) return;
 
     Edge new = malloc(sizeof(struct edge_struct));
     if (!new) return;
@@ -157,7 +154,8 @@ List neighbours(DGraph dgraph, Type tag) {
         current = getVertex(dgraph->vertex,dgraph->cmpTag,tag,dgraph->size);
         if(current){
             for (int i = 0; i < listSize(current->neighbours); i++) {
-                listAdd(neighbour, listGet(current->neighbours, i));
+                Vertex n = listGet(current->neighbours, i);
+                listAdd(neighbour, n->data);
             }
             return neighbour;
         }
@@ -187,6 +185,14 @@ Type getVertexData(DGraph dgraph, Type tag) {
 }
 
 void setEdgeTag(DGraph DG, Type src, Type dst, Type newTag) {
+    // Check if tag is already in use
+    Edge current;
+    for (int i = 0; i < listSize(DG->edge); i++) {
+        current = listGet(DG->edge, i);
+        if (DG->cmpTag(current->tag, newTag) == 0)
+            return;
+    }
+
     Edge e = getEdge(DG->edge, DG->cmpTag, src, dst);
     if (!e) return;
 
@@ -215,8 +221,8 @@ void removeVertex(DGraph DG, Type tag) {
     Vertex v;
     for (int i = 0; i < edgeCount; i++) {
         currentEdge = listGet(DG->edge, i);
-        if (DG->cmpTag(tag, currentEdge->destination)) {
-            v = getVertex(DG->vertex, DG->cmpTag, currentEdge->destination, DG->size);
+        if (DG->cmpTag(tag, currentEdge->destination) == 0) {
+            v = getVertex(DG->vertex, DG->cmpTag, currentEdge->source, DG->size);
             Vertex currentVertex;
             for (int j = 0; j < listSize(v->neighbours); j++) {
                 currentVertex = listGet(v->neighbours, j);
@@ -266,7 +272,7 @@ void removeEdge(DGraph DG, Type src, Type dst) {
     Vertex currentV;
     for (int i = 0; i < listSize(vSrc->neighbours); i++) {
         currentV = listGet(vSrc->neighbours, i);
-        if (DG->cmpTag(currentV->tag, dst)) {
+        if (DG->cmpTag(currentV->tag, dst) == 0) {
             listRemove(vSrc->neighbours, i);
             break;
         }
