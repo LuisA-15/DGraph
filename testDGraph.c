@@ -18,11 +18,11 @@ void printNeighbours(List);
 int main() {
     // Test data for later usage
     Student s[5] = {
-            newStudent(1, 18),
-            newStudent(2, 19),
-            newStudent(3, 20),
-            newStudent(4, 19),
-            newStudent(5, 22)
+            newStudent(0, 18),
+            newStudent(1, 19),
+            newStudent(2, 20),
+            newStudent(3, 19),
+            newStudent(4, 22)
     };
     int *tags[5] = {
             newInt(10),
@@ -61,7 +61,10 @@ int main() {
 
     printTag(getEdgeTag(DG, &s[0]->id, &s[1]->id));
     printTag(getEdgeTag(DG, &s[0]->id, &s[2]->id));
+    printTag(getEdgeTag(DG, &s[2]->id, &s[3]->id));
+
     printTag(getEdgeTag(DG, &s[1]->id, &s[2]->id));
+
     printf("--------------------------------\n");
 
     printf("**Case 4 Set new data for Vertex and Edge**\n\n");
